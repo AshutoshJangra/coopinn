@@ -1,6 +1,6 @@
 const User = require("../models/UserModel");
 
-const catchAsync = require("./../utils/catchAsync");
+const catchAsync = require("../utils/catchAsync");
 
 exports.getPublicUser = catchAsync(async (req, res) => {
 	const number = req.query.number * 1;

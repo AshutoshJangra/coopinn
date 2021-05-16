@@ -1,6 +1,6 @@
 const Shop = require("../models/ShopModel");
 
-const catchAsync = require("./../utils/catchAsync");
+const catchAsync = require("../utils/catchAsync");
 
 exports.getAllShops = catchAsync(async (req, res, next) => {
 	const shops = await Shop.find({});

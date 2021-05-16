@@ -1,8 +1,7 @@
 const fs = require("fs");
-const Transaction = require("./../models/TransactionModel");
+const Transaction = require("../models/TransactionModel");
 
-const catchAsync = require("./../utils/catchAsync");
-// const threads = JSON.parse(fs.readFileSync(`${__dirname}/../data/data.json`));
+const catchAsync = require("../utils/catchAsync");
 
 exports.getAllTransactions = catchAsync(async (req, res, next) => {
 	if (req.query.custNumber) {
