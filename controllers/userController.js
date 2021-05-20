@@ -1,4 +1,5 @@
 const User = require("../models/UserModel");
+const Transaction = require("../models/TransactionModel");
 
 const catchAsync = require("../utils/catchAsync");
 
@@ -9,10 +10,14 @@ exports.getPublicUser = catchAsync(async (req, res) => {
 	const user = await User.findOne({ userNum: number });
 
 	if (user && user.passcode === code) {
-		console.log("inside get public");
+		const trans = await Transaction.find({ custNumber: number })
+			.sort({ date: -1 })
+			.limit(50);
+
 		res.status(200).json({
 			status: "success",
 			user,
+			transactions: trans,
 		});
 	} else {
 		res.status(404).json({
@@ -41,11 +46,19 @@ exports.getUser = catchAsync(async (req, res, next) => {
 		res.status(200).json({
 			status: "success",
 			user: u,
+			transactions: [],
 		});
 	} else {
+		const trans = await Transaction.find({
+			custNumber: req.params.id,
+		})
+			.sort({ date: -1 })
+			.limit(50);
+
 		res.status(200).json({
 			status: "success",
 			user,
+			transactions: trans,
 		});
 	}
 });
