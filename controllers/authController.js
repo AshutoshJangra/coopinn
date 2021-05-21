@@ -33,7 +33,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 	});
 
 	// JWT Token sign
-	const token = signToken(newShop._id);
+	const token = signToken(newShop.sellerName);
 
 	res.status(200).json({
 		status: "success",
@@ -60,7 +60,7 @@ exports.login = catchAsync(async (req, res, next) => {
 		return next(new AppError("Incorrect Email & Password", 401));
 	}
 	// 3) If everything ok Send JWT to client
-	const token = signToken(shop._id);
+	const token = signToken(shop.sellerName);
 
 	res.status(200).json({
 		status: "success",
@@ -95,7 +95,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 	);
 
 	//3) Check if user still exists
-	const freshUser = await Shop.findById(decoded.id);
+	const freshUser = await Shop.findOne({ sellerName: decoded.id });
 	if (!freshUser) {
 		return next(
 			new AppError("The user belonging to this no longer exist.", 401)
