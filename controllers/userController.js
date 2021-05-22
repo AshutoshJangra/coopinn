@@ -49,16 +49,9 @@ exports.getUser = catchAsync(async (req, res, next) => {
 			transactions: [],
 		});
 	} else {
-		const trans = await Transaction.find({
-			custNumber: req.params.id,
-		})
-			.sort({ date: -1 })
-			.limit(50);
-
 		res.status(200).json({
 			status: "success",
 			user,
-			transactions: trans,
 		});
 	}
 });
