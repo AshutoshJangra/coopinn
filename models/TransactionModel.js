@@ -3,8 +3,6 @@ const mongoose = require("mongoose");
 const User = require("./UserModel");
 const Shop = require("./ShopModel");
 
-let s;
-
 const transactionSchema = new mongoose.Schema({
 	sellerName: {
 		type: String,
@@ -30,33 +28,35 @@ const transactionSchema = new mongoose.Schema({
 	},
 });
 
-transactionSchema.pre("save", async function(next) {
-	s = await Shop.find({ sellerName: this.sellerName });
+// transactionSchema.pre("save", async function(next) {
 
-	try {
-		const sl = this.bill + s[0].totalSale;
-		const rg =
-			(s[0].rewardPercentage / 100) * (this.bill - this.debit) +
-			s[0].totalRewardGiven;
-		const rc = this.debit + s[0].rewardToClaim;
+// 	try {
 
-		const su = await Shop.updateOne(
-			{ sellerName: this.sellerName },
-			{
-				totalRewardGiven: rg,
-				totalSale: sl,
-				rewardToClaim: rc,
-			}
-		);
-	} catch (e) {
-		console.log(e);
-	}
+// 	} catch (e) {
+// 		console.log(e);
+// 	}
 
-	next();
-});
+// 	next();
+// });
 
 transactionSchema.post("save", async function(doc, next) {
+	const s = await Shop.find({ sellerName: this.sellerName });
 	const u = await User.find({ userNum: this.custNumber });
+
+	const sl = this.bill + s[0].totalSale;
+	const rg =
+		(s[0].rewardPercentage / 100) * (this.bill - this.debit) +
+		s[0].totalRewardGiven;
+	const rc = this.debit + s[0].rewardToClaim;
+
+	await Shop.updateOne(
+		{ sellerName: this.sellerName },
+		{
+			totalRewardGiven: rg,
+			totalSale: sl,
+			rewardToClaim: rc,
+		}
+	);
 
 	const b = this.bill + u[0].totalShopping;
 
