@@ -25,37 +25,38 @@ const transactionSchema = new mongoose.Schema({
 		default: 0,
 	},
 	date: {
-		type: String,
-		default: Date.toDateString,
+		type: Date,
+		default: new Date(Date.UTC(year, month, day, hour, minute, second)),
 	},
 });
 
-transactionSchema.pre("save", async function(next) {
-	s = await Shop.find({ sellerName: this.sellerName });
+// transactionSchema.pre("save", async function(next) {
+// 	try {
+// 	} catch (e) {
+// 		console.log(e);
+// 	}
 
-	try {
-		const sl = this.bill + s[0].totalSale;
-		const rg =
-			(s[0].rewardPercentage / 100) * (this.bill - this.debit) +
-			s[0].totalRewardGiven;
-		const rc = this.debit + s[0].rewardToClaim;
-
-		const su = await Shop.updateOne(
-			{ sellerName: this.sellerName },
-			{
-				totalRewardGiven: rg,
-				totalSale: sl,
-				rewardToClaim: rc,
-			}
-		);
-	} catch (e) {
-		console.log(e);
-	}
-
-	next();
-});
+// 	next();
+// });
 
 transactionSchema.post("save", async function(doc, next) {
+	const s = await Shop.find({ sellerName: this.sellerName });
+
+	const sl = this.bill + s[0].totalSale;
+	const rg =
+		(s[0].rewardPercentage / 100) * (this.bill - this.debit) +
+		s[0].totalRewardGiven;
+	const rc = this.debit + s[0].rewardToClaim;
+
+	await Shop.updateOne(
+		{ sellerName: this.sellerName },
+		{
+			totalRewardGiven: rg,
+			totalSale: sl,
+			rewardToClaim: rc,
+		}
+	);
+
 	const u = await User.find({ userNum: this.custNumber });
 
 	const b = this.bill + u[0].totalShopping;
