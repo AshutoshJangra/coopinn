@@ -3,8 +3,6 @@ const mongoose = require("mongoose");
 const User = require("./UserModel");
 const Shop = require("./ShopModel");
 
-let s;
-
 const transactionSchema = new mongoose.Schema({
 	sellerName: {
 		type: String,
@@ -26,7 +24,7 @@ const transactionSchema = new mongoose.Schema({
 	},
 	date: {
 		type: Date,
-		default: new Date(Date.UTC(year, month, day, hour, minute, second)),
+		default: new Date(Date.UTC(day, month, year, hour, minute, second)),
 	},
 });
 
