@@ -24,7 +24,7 @@ const transactionSchema = new mongoose.Schema({
 	},
 	date: {
 		type: Date,
-		default: new Date(Date.UTC(day, month, year, hour, minute, second)),
+		default: Date,
 	},
 });
 
