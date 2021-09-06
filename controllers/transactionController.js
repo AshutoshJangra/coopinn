@@ -26,7 +26,7 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
 		debit: req.body.debit,
 		sellerName: req.user.sellerName,
 	};
-
+	console.log(data);
 	const newTran = await Transaction.create(data);
 	res.status(200).json({
 		status: "success",
