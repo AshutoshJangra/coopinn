@@ -7,26 +7,23 @@ const userSchema = new Schema({
 		Required: true,
 		unique: true,
 	},
-	totalShopping: {
-		type: Number,
-		default: 0,
-	},
-	totalRewards: {
-		type: Number,
-		default: 0,
-	},
+
 	passcode: {
 		type: Number,
-		default: 1519,
+		default: null,
 	},
+
+	rewards: [{ type: Schema.Types.ObjectId, ref: "Reward" }],
 });
 
 userSchema.pre("save", function(next) {
 	const code = Math.random()
 		.toString()
 		.substr(2, 4);
-	this.passcode = parseInt(code);
 
+	if (!this.passcode) {
+		this.passcode = parseInt(code);
+	}
 	next();
 });
 

@@ -17,7 +17,7 @@ exports.getShopInfo = catchAsync(async (req, res, next) => {
 		sellerName: req.user.sellerName,
 	})
 		.sort({ date: -1 })
-		.limit(50);
+		.limit(30);
 
 	res.status(200).json({
 		status: "success",
