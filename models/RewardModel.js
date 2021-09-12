@@ -10,6 +10,11 @@ const rewardSchema = new Schema({
 		type: Number,
 		default: 0,
 	},
+	passcode: {
+		type: Number,
+		default: null,
+	},
+
 	number: {
 		type: Number,
 		Required: true,

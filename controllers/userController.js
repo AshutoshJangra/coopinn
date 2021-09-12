@@ -46,21 +46,21 @@ exports.getUser = catchAsync(async (req, res, next) => {
 	if (!user) {
 		const temp = await User.findOne({ userNum: req.params.id });
 		if (!temp) {
+			const u = await User.create({
+				userNum: req.params.id,
+			});
+
 			const r = await new Reward({
 				number: req.params.id,
 				shopName: req.user.sellerName,
+				passcode: u.passcode,
 			});
 
-			await r.save(async function(err) {
-				console.log(err);
+			u.rewards.push(r);
 
-				const u = await new User({
-					userNum: req.params.id,
-					rewards: r,
-				});
+			await u.save();
 
-				await u.save();
-			});
+			await r.save();
 
 			res.status(200).json({
 				status: "success",
@@ -70,6 +70,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
 			const r = await new Reward({
 				number: req.params.id,
 				shopName: req.user.sellerName,
+				passcode: temp.passcode,
 			});
 
 			await r.save();
