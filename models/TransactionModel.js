@@ -19,7 +19,11 @@ const transactionSchema = new mongoose.Schema({
 		type: Number,
 		required: true,
 	},
-
+	reward: {
+		type: Number,
+		required: true,
+		default: 3,
+	},
 	debit: {
 		type: Number,
 		default: 0,
@@ -42,8 +46,7 @@ transactionSchema.post("save", async function(doc, next) {
 	const s = await Shop.find({ sellerName: this.sellerName });
 	const sl = this.bill + s[0].totalSale;
 	const rg =
-		(s[0].rewardPercentage / 100) * (this.bill - this.debit) +
-		s[0].totalRewardGiven;
+		(this.reward / 100) * (this.bill - this.debit) + s[0].totalRewardGiven;
 	const rc = this.debit + s[0].rewardToClaim;
 
 	await Shop.updateOne(
@@ -64,7 +67,7 @@ transactionSchema.post("save", async function(doc, next) {
 
 	//reward calculation debit/credit
 	const temp = u[0].totalRewards - this.debit;
-	const r = (s[0].rewardPercentage / 100) * (this.bill - this.debit) + temp;
+	const r = (this.reward / 100) * (this.bill - this.debit) + temp;
 
 	await Reward.updateOne(
 		{ number: this.custNumber, shopName: this.sellerName },
