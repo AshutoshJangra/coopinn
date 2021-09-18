@@ -21,7 +21,6 @@ const transactionSchema = new mongoose.Schema({
 	},
 	reward: {
 		type: Number,
-		required: true,
 		default: 3,
 	},
 	debit: {
